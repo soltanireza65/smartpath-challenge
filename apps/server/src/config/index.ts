@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 import { z } from "zod";
 
-config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
+config();
 
 const schema = z.object({
     PORT: z.string(),

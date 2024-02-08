@@ -4,12 +4,11 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["./src/types.d.ts"],
     "target": "es2017",
     "strict": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"]
     }
   },
   "exclude": ["dist", "node_modules"]

@@ -1,10 +1,10 @@
-import { getServer } from "@/server"
-// import { dbConnector } from "./utils/dbConnector"
-import { userRoutes } from "@/routes/user.routes"
+import { getServer } from "@/utils/server"
+import { authRoutes } from "@/routes/auth.routes"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 export class App {
     private _server: FastifyInstance
+
     constructor(
         private readonly _port: number = 8000,
         private readonly _host: string = "0.0.0.0"
@@ -45,7 +45,7 @@ export class App {
     }
 
     registerRoutes() {
-        this._server.register(userRoutes, { prefix: "/api/users" });
+        this._server.register(authRoutes, { prefix: "/api/auth" });
     }
 
     connnectDB() {
@@ -58,10 +58,15 @@ export class App {
 
 
     async listen() {
-        await this._server.listen({
-            port: this._port,
-            host: this._host,
-        });
+        try {
+            await this._server.listen({
+                port: this._port,
+                host: this._host,
+            });
+        } catch (error) {
+            this._server.log.error(error);
+            process.exit(1);
+        }
     }
 
     gracefullyClose() {

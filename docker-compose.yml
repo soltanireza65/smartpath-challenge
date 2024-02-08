@@ -1,11 +1,13 @@
 version: '3.9'
 
 services:
-  mongodb:
-    image: mongo
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
     ports:
-      - 27017:27017
+      - 5432:5432
     volumes:
-      - mongodata:/var/lib/mongodb/data
+      - pgdata:/var/lib/postgresql/data
 volumes:
-  mongodata:
+  pgdata:

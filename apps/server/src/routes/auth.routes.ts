@@ -17,6 +17,7 @@ const signUpSchema = {
                 id: { type: "string" },
                 name: { type: "string" },
                 email: { type: "string" },
+                accessToken: { type: "string" },
             },
         },
     },

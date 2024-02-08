@@ -2,6 +2,7 @@
 
 import AppCard from "@/components/AppCard";
 import AppFormInput from "@/components/AppFormInput";
+import { apiClient } from "@/utils/apiClient";
 import {
     Box,
     Button,
@@ -53,9 +54,8 @@ const SignUpPage = (props: Props) => {
                         }}
                         validationSchema={validationSchema}
                         onSubmit={async (values) => {
-                            // await new Promise((r) => setTimeout(r, 500));
-                            // alert(JSON.stringify(values, null, 2));
-                            axios.post("http://localhost:8000/api/auth/signup", values)
+                            const user = await apiClient.post("/auth/signup", values)
+                            console.log("🚀 ~ onSubmit={ ~ user:", user)
                         }}
                     >
                         {({ values, errors, handleChange, touched }) => (

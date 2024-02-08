@@ -1,9 +1,7 @@
-import { App } from "@/app"
 import { server } from "@/main"
-import { SignInInput, SignInResponce, SignUpInput } from "@/schemas/auth.schemas"
 import { hashPassword, verifyPassword } from "@/utils/hash.util"
 import prisma from "@/utils/prisma"
-import { getServer } from "@/utils/server"
+import { SignInInput, SignInResponce, SignUpInput } from "types"
 
 
 
@@ -13,14 +11,20 @@ export class AuthService {
 
         const { password, ...rest } = payload
 
-        const { hash, salt } = hashPassword(password)
-
+        const { hash, salt } = hashPassword(payload.password)
 
         const user = await prisma.user.create({
             data: { ...rest, salt, password: hash }
         })
-        return user
+
+        const token = server.jwt.sign({ id: user.id, ...rest })
+
+        return {
+            ...user,
+            accessToken: token,
+        }
     }
+    
     public static async signin(payload: SignInInput): Promise<SignInResponce> {
 
 

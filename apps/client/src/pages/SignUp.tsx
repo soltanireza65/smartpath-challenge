@@ -34,12 +34,8 @@ const SignUpPage = () => {
         height="100vh"
       >
         <>ICON</>
-        <Text variant="h4">Create an account</Text>
-        <Text
-          color="text.secondary"
-          mb={4}
-        // fontSize={10}
-        >
+        <Text fontSize={24} fontWeight="700">Create an account</Text>
+        <Text fontSize={12} color="text.secondary" mb={4}>
           Start your 30-day free trial
         </Text>
         <Card>
@@ -60,7 +56,7 @@ const SignUpPage = () => {
                     navigate("/");
                   }
                 } catch (error) {
-                  console.error("🚀 ~ onSubmit={ ~ error:", error)
+                  console.error("🚀 ~ onSubmit= ~ error:", error)
                 }
               }}
             >
@@ -84,15 +80,10 @@ const SignUpPage = () => {
           </CardBody>
         </Card>
         <Box mt={4}>
-
-          <Text
-            color="text.secondary"
-            fontSize={12}
-            mb={4}
-          >
-            Already have an account? <span style={{ cursor: "pointer" }} onClick={() => navigate("/auth/signin")}>signin</span>
-
-          </Text>
+          <Box display="flex" gap={2} alignItems="center">
+            <Text fontSize={12} color="text.secondary">Already have an account?</Text>
+            <Text fontSize={12} cursor="pointer" color="green" onClick={() => navigate("/auth/signin")}>signin</Text>
+          </Box>
         </Box>
       </Box>
     </Box>

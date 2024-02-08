@@ -8,9 +8,9 @@ import {
     Button,
     Typography
 } from "@mui/material";
-import axios from "axios";
 import { Form, Formik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as yup from "yup";
 
 const validationSchema = yup.object({
@@ -28,6 +28,8 @@ const validationSchema = yup.object({
 type Props = {};
 
 const SignUpPage = (props: Props) => {
+    const router = useRouter()
+
     return (
         <Box flex={1}>
             <Box
@@ -54,8 +56,17 @@ const SignUpPage = (props: Props) => {
                         }}
                         validationSchema={validationSchema}
                         onSubmit={async (values) => {
-                            const user = await apiClient.post("/auth/signup", values)
-                            console.log("🚀 ~ onSubmit={ ~ user:", user)
+                            try {
+                                const { data } = await apiClient.post("/auth/signup", values)
+                                const { accessToken } = data
+                                if(accessToken){
+                                    localStorage.setItem("accessToken", accessToken)
+                                    router.push("/")
+
+                                }
+                            } catch (error) {
+                                console.error("🚀 ~ onSubmit={ ~ error:", error)
+                            }
                         }}
                     >
                         {({ values, errors, handleChange, touched }) => (

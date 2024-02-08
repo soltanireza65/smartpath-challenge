@@ -12,6 +12,7 @@ import { FC, InputHTMLAttributes } from "react";
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   ref?: any;
   label?: string;
+  caption?: string;
   isRequired?: boolean;
   height?: string;
   name: string;
@@ -25,6 +26,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 const AppFormInput: FC<InputFieldProps> = ({
   ref,
   label,
+  caption,
   required,
   height,
   variant = "outline",
@@ -34,7 +36,7 @@ const AppFormInput: FC<InputFieldProps> = ({
   const [field, { error, touched }] = useField(props);
 
   return (
-    <FormControl isInvalid={!!error} bg="white">
+    <FormControl isInvalid={!!error}>
       {label && (
         <FormLabel flex={1} htmlFor={field.name}>
           {label}{required && <Box display="inline">*</Box>}
@@ -54,6 +56,7 @@ const AppFormInput: FC<InputFieldProps> = ({
           {...props}
         />
       </InputGroup>
+      {caption && <Box color="text.secondary">{caption}</Box>}
       {error && touched ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );

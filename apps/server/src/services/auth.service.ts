@@ -20,11 +20,10 @@ export class AuthService {
         const token = server.jwt.sign({ id: user.id, ...rest })
 
         return {
-            ...user,
             accessToken: token,
         }
     }
-    
+
     public static async signin(payload: SignInInput): Promise<SignInResponce> {
 
 

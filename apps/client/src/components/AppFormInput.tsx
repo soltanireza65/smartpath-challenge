@@ -1,45 +1,61 @@
-import { FormGroup, FormLabel, TextField, Typography } from "@mui/material";
-import React, { FC, InputHTMLAttributes } from "react";
+import {
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  InputGroup
+} from "@chakra-ui/react";
+import { useField } from "formik";
+import { FC, InputHTMLAttributes } from "react";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
-  caption?: string;
+  ref?: any;
+  label?: string;
+  isRequired?: boolean;
+  height?: string;
   name: string;
-  type?: "text" | "email" | "password";
-  required?: boolean;
-  error?: string;
+  flex?: number;
+  placeHolder?: string;
+  variant?: "outline" | "filled" | "flushed" | "unstyled";
   value?: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  type?: "text" | "number" | "password";
+  size?: "lg" | "md" | "sm" | "xs";
 };
 const AppFormInput: FC<InputFieldProps> = ({
+  ref,
   label,
-  caption,
-  name,
-  value,
-  type = "text",
-  error,
   required,
-  onBlur,
-  onChange,
+  height,
+  variant = "outline",
+  size,
+  ...props
 }) => {
+  const [field, { error, touched }] = useField(props);
 
   return (
-    <FormGroup>
-      <FormLabel>{label}{required && "*"}</FormLabel>
-      <TextField
-        fullWidth
-        size="small"
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        error={!!error}
-        helperText={error}
-      />
-      {caption && <Typography fontSize={12} color={"text.secondary"}>{caption}</Typography>}
-    </FormGroup>
+    <FormControl isInvalid={!!error} bg="white">
+      {label && (
+        <FormLabel flex={1} htmlFor={field.name}>
+          {label}{required && <Box display="inline">*</Box>}
+        </FormLabel>
+      )}
+      <InputGroup>
+        <Input
+          ref={ref}
+          _active={{}}
+          _focus={{}}
+          id={field.name}
+          variant={variant}
+          height={height}
+          size={size}
+          // autoComplete="off"
+          {...field}
+          {...props}
+        />
+      </InputGroup>
+      {error && touched ? <FormErrorMessage>{error}</FormErrorMessage> : null}
+    </FormControl>
   );
 };
 

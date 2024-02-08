@@ -1,1 +1,1 @@
-export const isAuthenticated = !!localStorage.getItem("accessToken") 
+export const isAuthenticated = typeof window !== "undefined" ? !!localStorage.getItem("accessToken") : false

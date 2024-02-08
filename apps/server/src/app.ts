@@ -4,19 +4,18 @@ import fastifyJWT from "@fastify/jwt"
 import { JWT_SECRET } from "./config"
 import { userRoutes } from "./routes/user.routes"
 import cors from '@fastify/cors'
-import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 
 
 export class App {
     constructor(
-        private _server: FastifyInstance,
+        private readonly _server: FastifyInstance,
         private readonly _port: number = 8000,
         private readonly _host: string = "0.0.0.0"
     ) { }
 
     async start() {
         this.registerCors()
-        // this.registerCookie()
+
         this.registerJwt()
 
         this.decorate()
@@ -56,8 +55,6 @@ export class App {
     addHook() { }
 
     registerSchema() {
-        // [...authSchemas].forEach((schema) => this._server.addSchema(schema))
-
     }
     registerRoutes() {
         this._server.register(authRoutes, { prefix: "/api/auth" });

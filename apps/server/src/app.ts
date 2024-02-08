@@ -3,6 +3,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import fastifyJWT from "@fastify/jwt"
 import { JWT_SECRET } from "./config"
 import { userRoutes } from "./routes/user.routes"
+import cors from '@fastify/cors'
 
 
 export class App {
@@ -13,6 +14,8 @@ export class App {
     ) { }
 
     async start() {
+        this.registerCors()
+
         this.registerJwt()
 
         this.decorate()
@@ -42,6 +45,11 @@ export class App {
                 return reply.send(error)
             }
         })
+    }
+
+
+    async registerCors() {
+        await this._server.register(cors, {})
     }
 
     addHook() { }

@@ -17,6 +17,7 @@ export class AuthController {
             return reply.code(500).send(error)
         }
     }
+    
     public static async signin(
         request: FastifyRequest<{ Body: SignInInput }>,
         reply: FastifyReply

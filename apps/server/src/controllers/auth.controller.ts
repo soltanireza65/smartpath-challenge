@@ -1,6 +1,6 @@
-import { SignInInput, SignUpInput } from "@/schemas/auth.schemas";
-import { UserService } from "@/services/auth.service";
+import { AuthService } from "@/services/auth.service";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { SignInInput, SignUpInput } from "types";
 
 export class AuthController {
     public static async signup(
@@ -10,7 +10,7 @@ export class AuthController {
         const { body } = request
 
         try {
-            const user = await UserService.signup(body)
+            const user = await AuthService.signup(body)
 
             return reply.code(201).send(user)
         } catch (error) {
@@ -24,11 +24,11 @@ export class AuthController {
         const { body } = request
 
         try {
-            const res = await UserService.signin(body)
+            const res = await AuthService.signin(body)
 
             return reply.code(201).send(res)
         } catch (error) {
-            return reply.code(500).send(error)
+            return reply.code(401).send(error)
         }
     }
 }

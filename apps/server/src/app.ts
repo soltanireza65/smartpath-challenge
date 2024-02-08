@@ -1,9 +1,8 @@
-import { getServer } from "@/utils/server"
 import { authRoutes } from "@/routes/auth.routes"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import { authSchemas } from "./schemas/auth.schemas"
 import fastifyJWT from "@fastify/jwt"
 import { JWT_SECRET } from "./config"
+import { userRoutes } from "./routes/user.routes"
 
 
 export class App {
@@ -48,10 +47,12 @@ export class App {
     addHook() { }
 
     registerSchema() {
-        authSchemas.forEach((schema) => this._server.addSchema(schema))
+        // [...authSchemas].forEach((schema) => this._server.addSchema(schema))
+
     }
     registerRoutes() {
         this._server.register(authRoutes, { prefix: "/api/auth" });
+        this._server.register(userRoutes, { prefix: "/api/users" });
     }
 
     async listen() {

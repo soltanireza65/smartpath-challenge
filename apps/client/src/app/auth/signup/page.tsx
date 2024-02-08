@@ -7,6 +7,7 @@ import {
     Button,
     Typography
 } from "@mui/material";
+import axios from "axios";
 import { Form, Formik } from "formik";
 import Link from "next/link";
 import * as yup from "yup";
@@ -52,8 +53,9 @@ const SignUpPage = (props: Props) => {
                         }}
                         validationSchema={validationSchema}
                         onSubmit={async (values) => {
-                            await new Promise((r) => setTimeout(r, 500));
-                            alert(JSON.stringify(values, null, 2));
+                            // await new Promise((r) => setTimeout(r, 500));
+                            // alert(JSON.stringify(values, null, 2));
+                            axios.post("/api/auth/signup", values)
                         }}
                     >
                         {({ values, errors, handleChange, touched }) => (

@@ -7,7 +7,7 @@ import { getServer } from "@/utils/server"
 
 
 
-export class UserService {
+export class AuthService {
 
     public static async signup(payload: SignUpInput) {
 
@@ -46,15 +46,4 @@ export class UserService {
 
         return { accessToken: token }
     }
-    public static async findUserByEmail(email: string) {
-        const user = await prisma.user.findUnique({
-            where: {
-                email
-            }
-        })
-
-        return user
-    }
-
-
 }

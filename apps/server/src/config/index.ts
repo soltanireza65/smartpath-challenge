@@ -9,16 +9,6 @@ const schema = z.object({
     HOST: z.string(),
     JWT_SECRET: z.string(),
 })
-// const userSchema = z.object({
-//     username: z.string(),
-//     password: z.string(),
-//     confirmPassword: z.string(),
-// }).refine(data => data.password === data.confirmPassword, {
-//     message: "Passwords do not match",
-//     path: ["confirmPassword"]
-// })
-
-// userSchema.parse({ username: "test", password: "test", confirmPassword: "testt" })
 
 export type Config = z.infer<typeof schema>;
 

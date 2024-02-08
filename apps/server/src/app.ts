@@ -1,5 +1,5 @@
 import { getServer } from "@/server"
-import { dbConnector } from "./utils/dbConnector"
+// import { dbConnector } from "./utils/dbConnector"
 import { userRoutes } from "@/routes/user.routes"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
@@ -49,7 +49,7 @@ export class App {
     }
 
     connnectDB() {
-        this._server.register(dbConnector)
+        // this._server.register(dbConnector)
     }
 
     public get server(): FastifyInstance {

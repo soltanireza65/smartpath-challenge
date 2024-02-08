@@ -1,6 +1,7 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { createUserSchema } from "./schemas/createUser.schema";
 import { AuthController } from "@/controllers/auth.controller";
+import { signInSchema, signUpSchema } from "@/schemas/auth.schemas";
+import { FastifyInstance } from "fastify";
+
 export async function authRoutes(server: FastifyInstance) {
     server.addHook("onRequest", async (req, reply) => server.log.info("api/user: onRequest"))
     server.addHook("onResponse", async (req, reply) => server.log.info(`api/user: onResponse: ${reply.elapsedTime}`))
@@ -16,8 +17,9 @@ export async function authRoutes(server: FastifyInstance) {
         },
     })
 
-    server.post("/signup", AuthController.signup);
-    
+    server.post("/signup", { schema: signUpSchema }, AuthController.signup);
+    server.post("/signin", { schema: signInSchema }, AuthController.signin);
+
     // server.post("/signup", {
     //     schema: createUserSchema,
     //     handler: async (

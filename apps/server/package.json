@@ -9,10 +9,10 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@fastify/jwt": "^8.0.0",
     "@prisma/client": "^5.9.1",
     "dotenv": "^16.4.1",
     "fastify": "^4.26.0",
-    "fastify-jwt": "^4.2.0",
     "fastify-swagger": "^5.2.0",
     "fastify-zod": "^1.4.0",
     "pino-pretty": "^10.3.1",

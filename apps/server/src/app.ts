@@ -1,21 +1,26 @@
 import { getServer } from "@/utils/server"
 import { authRoutes } from "@/routes/auth.routes"
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
+import { authSchemas } from "./schemas/auth.schemas"
+import fastifyJWT from "@fastify/jwt"
+import { JWT_SECRET } from "./config"
+
 
 export class App {
-    private _server: FastifyInstance
-
     constructor(
+        private _server: FastifyInstance,
         private readonly _port: number = 8000,
         private readonly _host: string = "0.0.0.0"
     ) {
-        this._server = getServer()
+        // this._server = getServer()
     }
 
     async start() {
+        this.registerJwt()
+
         this.decorate()
 
-        this.connnectDB()
+        this.registerSchema()
 
         this.registerRoutes()
 
@@ -23,39 +28,37 @@ export class App {
 
         await this.listen();
 
-        this.gracefullyClose()
+        this.gracefullyShutDown()
+    }
+
+    registerJwt() {
+        this._server.register(fastifyJWT, {
+            secret: JWT_SECRET
+        })
     }
 
     decorate() {
-        this._server.decorate("signJWT", () => "token")
-        this._server.decorate("verifyJWT", () => ({ "name": "reza" }))
-    }
-    addHook() {
-        this._server.decorateRequest("user", null)
-        this._server.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
-            request.user = {
-                name: "reza"
+        this._server.decorate("auth", async (request: FastifyRequest, reply: FastifyReply) => {
+            try {
+                await request.jwtVerify()
+            } catch (error) {
+                return reply.send(error)
             }
         })
-
-        this._server.addHook("onRequest", async (req, reply) => this._server.log.info("onRequest"))
-
-        this._server.addHook("onResponse", async (req, reply) => this._server.log.info(`onResponse: ${reply.elapsedTime}`))
-
     }
 
+    addHook() { }
+
+    registerSchema() {
+        authSchemas.forEach((schema) => this._server.addSchema(schema))
+    }
     registerRoutes() {
         this._server.register(authRoutes, { prefix: "/api/auth" });
-    }
-
-    connnectDB() {
-        // this._server.register(dbConnector)
     }
 
     public get server(): FastifyInstance {
         return this._server
     }
-
 
     async listen() {
         try {
@@ -69,7 +72,7 @@ export class App {
         }
     }
 
-    gracefullyClose() {
+    gracefullyShutDown() {
         ["SIGINT", "SIGTERM"].forEach((signal) => {
             process.on(signal, async () => {
                 await this._server.close();

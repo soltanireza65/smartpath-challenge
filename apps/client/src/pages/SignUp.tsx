@@ -1,10 +1,12 @@
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Image, Text } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import AppFormInput from '../components/AppFormInput';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
+import googleLogo from '../assets/google.png'
+import GoogleIcon from '../components/icons/GoogleIcon';
 
 const validationSchema = yup.object({
   name: yup.string().required("name is required"),
@@ -37,6 +39,7 @@ const SignUpPage = () => {
         <Text
           color="text.secondary"
           mb={4}
+        // fontSize={10}
         >
           Start your 30-day free trial
         </Text>
@@ -69,7 +72,10 @@ const SignUpPage = () => {
                   <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
 
                   <Button width="100%" colorScheme='teal' type="submit">Submit</Button>
-                  <Button colorScheme='yellow'>GOOLE</Button>
+                  <Button display="flex" gap={2}>
+                    <GoogleIcon />
+                    <Text>Login with google</Text>
+                  </Button>
                 </Box>
               </Form>
             )}

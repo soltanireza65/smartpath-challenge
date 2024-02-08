@@ -1,12 +1,10 @@
 "use client";
 
 import AppCard from "@/components/AppCard";
+import AppFormInput from "@/components/AppFormInput";
 import {
     Box,
     Button,
-    FormGroup,
-    FormLabel,
-    TextField,
     Typography
 } from "@mui/material";
 import { Form, Formik } from "formik";
@@ -51,82 +49,22 @@ const SignUpPage = (props: Props) => {
                             name: undefined,
                             email: undefined,
                             password: undefined,
-                            confirmPassword: undefined,
                         }}
-                        // validationSchema={validationSchema}
+                        validationSchema={validationSchema}
                         onSubmit={async (values) => {
                             await new Promise((r) => setTimeout(r, 500));
                             alert(JSON.stringify(values, null, 2));
                         }}
                     >
-                        {(formik) => (
+                        {({ values, errors, handleChange, touched }) => (
                             <Form>
-                                <Box
-                                    display="flex"
-                                    flexDirection="column"
-                                    gap={2}
-                                    width={300}
-                                >
-                                    <FormGroup>
-                                        <FormLabel>Name*</FormLabel>
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name="name"
-                                            type="name"
-                                            value={formik.values.name}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={formik.touched.name && Boolean(formik.errors.name)}
-                                            helperText={formik.touched.name && formik.errors.name}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <FormLabel>Email*</FormLabel>
+                                <Box display="flex" flexDirection="column" gap={2} width={300}>
+                                    <AppFormInput label="Name" name="name" required value={values.name} onChange={handleChange} {...(touched.name ? { error: errors.name } : {})} />
+                                    <AppFormInput label="Email" name="email" required value={values.email} onChange={handleChange} {...(touched.email ? { error: errors.email } : {})} />
+                                    <AppFormInput label="Password" caption="Must be at least 8 characters." name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
 
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name="email"
-                                            type="email"
-                                            value={formik.values.email}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={
-                                                formik.touched.email && Boolean(formik.errors.email)
-                                            }
-                                            helperText={formik.touched.email && formik.errors.email}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <FormLabel>Password*</FormLabel>
-
-                                        <TextField
-                                            fullWidth
-                                            size="small"
-                                            name="password"
-                                            type="password"
-                                            value={formik.values.password}
-                                            onChange={formik.handleChange}
-                                            onBlur={formik.handleBlur}
-                                            error={
-                                                formik.touched.password &&
-                                                Boolean(formik.errors.password)
-                                            }
-                                            helperText={
-                                                formik.touched.password && formik.errors.password
-                                            }
-                                        />
-                                        <Typography fontSize={12} color={"text.secondary"}>Must be at least 8 characters.</Typography>
-                                    </FormGroup>
-
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit"
-                                    >
-                                        Submit
-                                    </Button>
+                                    <Button variant="contained" fullWidth type="submit">Submit</Button>
+                                    <Button variant="contained" fullWidth>GOOLE</Button>
                                 </Box>
                             </Form>
                         )}
@@ -134,13 +72,13 @@ const SignUpPage = (props: Props) => {
                 </AppCard>
                 <Box mt={4}>
 
-                <Typography
-                    color="text.secondary"
-                    fontSize={12}
-                    mb={4}
-                >
-                    Already have an account? <Link href="/auth/signin">signin</Link>
-                </Typography>
+                    <Typography
+                        color="text.secondary"
+                        fontSize={12}
+                        mb={4}
+                    >
+                        Already have an account? <Link href="/auth/signin">signin</Link>
+                    </Typography>
                 </Box>
             </Box>
         </Box>

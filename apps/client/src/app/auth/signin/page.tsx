@@ -1,35 +1,59 @@
-'use client'
+"use client";
 
-import AppCard from '@/components/AppCard'
-import { Box } from '@mui/material'
-import { Field, Form, Formik } from 'formik'
-import * as yup from 'yup'
+import AppCard from "@/components/AppCard";
+import AppFormInput from "@/components/AppFormInput";
+import {
+    Box,
+    Button,
+    FormGroup,
+    FormLabel,
+    TextField,
+    Typography
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import Link from "next/link";
+import * as yup from "yup";
 
 const validationSchema = yup.object({
+    name: yup.string().required("name is required"),
     email: yup
         .string()
-        .email('Enter a valid email')
-        .required('Email is required'),
+        .email("Enter a valid email")
+        .required("Email is required"),
     password: yup
         .string()
-        .min(8, 'Password should be of minimum 8 characters length')
-        .required('Password is required'),
+        .min(8, "Password should be of minimum 8 characters length")
+        .required("Password is required"),
+    confirmPassword: yup.string().oneOf([yup.ref("password")], "Passwords must match"),
 });
 
-type Props = {
-
-}
+type Props = {};
 
 const SignInPage = (props: Props) => {
     return (
         <Box flex={1}>
-            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                height="100vh"
+            >
+                <>ICON</>
+                <Typography variant="h4">Create an account</Typography>
+                <Typography
+                    color="text.secondary"
+                    mb={4}
+                >
+                    Start your 30-day free trial
+                </Typography>
                 <AppCard>
                     <Formik
                         initialValues={{
-                            firstName: '',
-                            lastName: '',
-                            email: '',
+                            name: undefined,
+                            email: undefined,
+                            password: undefined,
+                            confirmPassword: undefined,
                         }}
                         validationSchema={validationSchema}
                         onSubmit={async (values) => {
@@ -37,28 +61,33 @@ const SignInPage = (props: Props) => {
                             alert(JSON.stringify(values, null, 2));
                         }}
                     >
-                        <Form>
-                            <label htmlFor="firstName">First Name</label>
-                            <Field id="firstName" name="firstName" placeholder="Jane" />
+                        {({ values, errors, handleChange, touched }) => (
+                            <Form>
+                                <Box display="flex" flexDirection="column" gap={2} width={300}>
+                                    <AppFormInput label="Name" name="name" required value={values.name} onChange={handleChange} {...(touched.name ? { error: errors.name } : {})} />
+                                    <AppFormInput label="Email" name="email" required value={values.email} onChange={handleChange} {...(touched.email ? { error: errors.email } : {})} />
+                                    <AppFormInput label="Password" caption="Must be at least 8 characters." name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
 
-                            <label htmlFor="lastName">Last Name</label>
-                            <Field id="lastName" name="lastName" placeholder="Doe" />
-
-                            <label htmlFor="email">Email</label>
-                            <Field
-                                id="email"
-                                name="email"
-                                placeholder="jane@acme.com"
-                                type="email"
-                            />
-                            <button type="submit">Submit</button>
-                        </Form>
+                                    <Button variant="contained" fullWidth type="submit">Submit</Button>
+                                    <Button variant="contained" fullWidth>GOOLE</Button>
+                                </Box>
+                            </Form>
+                        )}
                     </Formik>
                 </AppCard>
-                {/* <Link href="/">Home</Link> */}
+                <Box mt={4}>
+
+                    <Typography
+                        color="text.secondary"
+                        fontSize={12}
+                        mb={4}
+                    >
+                        Already have an account? <Link href="/auth/signin">signin</Link>
+                    </Typography>
+                </Box>
             </Box>
         </Box>
-    )
-}
+    );
+};
 
-export default SignInPage
+export default SignInPage;

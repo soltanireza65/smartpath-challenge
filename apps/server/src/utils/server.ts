@@ -10,6 +10,10 @@ export function getServer() {
     });
 
 
+    server.get("/api/sessions/oauth/google", async (request, reply) => {
+        // TODO: add health check
+        return reply.code(200).send({ status: "healthy" });
+    })
     server.get("/hc", async (request, reply) => {
         // TODO: add health check
         return reply.code(200).send({ status: "healthy" });

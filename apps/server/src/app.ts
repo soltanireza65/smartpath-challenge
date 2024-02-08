@@ -4,6 +4,7 @@ import fastifyJWT from "@fastify/jwt"
 import { JWT_SECRET } from "./config"
 import { userRoutes } from "./routes/user.routes"
 import cors from '@fastify/cors'
+import cookie, { FastifyCookieOptions } from '@fastify/cookie'
 
 
 export class App {
@@ -15,7 +16,7 @@ export class App {
 
     async start() {
         this.registerCors()
-
+        // this.registerCookie()
         this.registerJwt()
 
         this.decorate()

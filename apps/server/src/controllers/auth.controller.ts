@@ -1,6 +1,11 @@
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URL } from "@/config";
 import { AuthService } from "@/services/auth.service";
+import axios from "axios";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { SignInInput, SignUpInput } from "types";
+import { stringify } from "qs";
+import { server } from "@/main";
+import prisma from "@/utils/prisma";
 
 export class AuthController {
     public static async signup(
@@ -17,7 +22,7 @@ export class AuthController {
             return reply.code(500).send(error)
         }
     }
-    
+
     public static async signin(
         request: FastifyRequest<{ Body: SignInInput }>,
         reply: FastifyReply
@@ -31,5 +36,58 @@ export class AuthController {
         } catch (error) {
             return reply.code(401).send(error)
         }
+    }
+    public static async googleOAuth(
+        request: FastifyRequest<{ Querystring: { code: string } }>,
+        reply: FastifyReply
+    ) {
+        const { code } = request.query
+
+        try {
+            const { id_token, access_token } = await AuthService.getGoogleOAuthToken(code)
+
+            // const googleUser = server.jwt.decode(id_token)
+            const googleUser = await AuthService.getGoogleUser(id_token, access_token)
+
+            if (!googleUser.verified_email) {
+                reply.code(403).send("Please verify your email first")
+            }
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: googleUser.email
+                }
+            })
+            if (!user) {
+                throw new Error("User not found")
+            }
+
+            const { password, salt, ...rest } = user
+            
+            const token = server.jwt.sign(rest)
+
+            return reply.redirect(`http://localhost:5173/auth/callback?accessToken=${token}`)
+
+            // const user = await prisma.user.upsert({
+            //     where: {
+            //         email: googleUser.email
+            //     },
+            //     create: {
+            //         name: googleUser.name,
+            //         email: googleUser.email,
+            //         password: "123456",
+            //         salt: "123456"
+            //     },
+            //     update: {
+            //         name: googleUser.name
+            //     }
+            // })
+        } catch (error) {
+            reply.redirect("http://localhost:5173/auth/signin")
+        }
+
+
+
+
     }
 }

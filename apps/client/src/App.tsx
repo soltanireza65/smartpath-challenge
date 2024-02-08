@@ -5,6 +5,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import { PrivateRoute } from "./components/PrivateRoute";
+import SignInCallback from "./pages/SignInCallback";
 // import { PrivateRoute } from "./components/PrivateRoute";
 
 export const isAuthenticated = !!localStorage.getItem("accessToken") ?? false
@@ -14,6 +15,7 @@ function App() {
   return (
     <Routes>
       <Route element={<AppLayout />}>
+        <Route path="/auth/callback" element={<SignInCallback />} />
         <Route path="/auth/signup" element={<SignUpPage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
         <Route element={<PrivateRoute />}>

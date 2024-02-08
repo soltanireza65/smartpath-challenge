@@ -43,5 +43,6 @@ export async function authRoutes(server: FastifyInstance) {
     server.post("/signup", { schema: signUpSchema }, AuthController.signup);
     server.post("/signin", { schema: signInSchema }, AuthController.signin);
 
+    server.get("/oauth/google", AuthController.googleOAuth);
     server.log.info("Auth routes registered")
 }

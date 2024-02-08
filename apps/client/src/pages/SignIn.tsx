@@ -7,6 +7,7 @@ import GoogleIcon from '../components/icons/GoogleIcon';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
 import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
+import { getGoogleOAuthUrl } from '../utils/google';
 
 const validationSchema = yup.object({
   name: yup.string().required("name is required"),
@@ -70,10 +71,12 @@ const SignInPage = () => {
                       <Link to='/auth/reset-password'><Text color="green" fontSize={12}>Forgot password</Text></Link>
                     </Box>
                     <Button width="100%" colorScheme='teal' type="submit">Submit</Button>
-                    <Button display="flex" gap={2}>
-                      <GoogleIcon />
-                      <Text>Sign up with google</Text>
-                    </Button>
+                    <a href={getGoogleOAuthUrl()}>
+                      <Button w="100%" display="flex" gap={2}>
+                        <GoogleIcon />
+                        <Text>Sign in with google</Text>
+                      </Button>
+                    </a>
                   </Box>
                 </Form>
               )}

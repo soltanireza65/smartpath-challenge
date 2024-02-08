@@ -11,9 +11,7 @@ export class App {
         private _server: FastifyInstance,
         private readonly _port: number = 8000,
         private readonly _host: string = "0.0.0.0"
-    ) {
-        // this._server = getServer()
-    }
+    ) { }
 
     async start() {
         this.registerJwt()
@@ -54,10 +52,6 @@ export class App {
     }
     registerRoutes() {
         this._server.register(authRoutes, { prefix: "/api/auth" });
-    }
-
-    public get server(): FastifyInstance {
-        return this._server
     }
 
     async listen() {

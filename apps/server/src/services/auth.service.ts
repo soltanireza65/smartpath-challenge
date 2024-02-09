@@ -50,18 +50,20 @@ export class AuthService {
             })
 
             if (!user) {
-                throw new Error("Invalid Credentials")
+                throw new Error("Invalid Credentials1")
             }
 
             const verified = verifyPassword({ candidatePassword: payload.password, hash: user.password, salt: user.salt })
 
             if (!verified) {
-                throw new Error("Invalid Credentials")
+                throw new Error("Invalid Credentials2")
             }
 
             const { password, salt, passwordResetCode, ...rest } = user
 
-            const token = this.signJWT(rest)
+            const token = this.signJWT(rest, {
+                ...(payload.remember && { expiresIn: "30d" })
+            })
 
             return { accessToken: token }
         } catch (error) {
@@ -147,6 +149,7 @@ export class AuthService {
             },
             data: {
                 password: hash,
+                salt,
                 passwordResetCode: null
             }
         })

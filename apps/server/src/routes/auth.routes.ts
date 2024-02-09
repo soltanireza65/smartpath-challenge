@@ -26,6 +26,7 @@ const signInSchema = {
         properties: {
             email: { type: "string" },
             password: { type: "string" },
+            remember: { type: "boolean" },
         },
     },
     response: {

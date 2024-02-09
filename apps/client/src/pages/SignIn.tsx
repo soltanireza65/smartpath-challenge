@@ -45,8 +45,9 @@ const SignInPage = () => {
               initialValues={{
                 email: "",
                 password: "",
+                remember: false
               }}
-              validationSchema={validationSchema}
+              // validationSchema={validationSchema}
               onSubmit={async (values) => {
                 try {
                   const { data } = await apiClient.post("/auth/signin", values)
@@ -60,13 +61,14 @@ const SignInPage = () => {
                 }
               }}
             >
-              {({ values, errors, handleChange, touched }) => (
+              {({ values, errors, handleChange, touched , setFieldValue}) => (
                 <Form>
                   <Box display="flex" flexDirection="column" gap={2} width={300}>
+                    {JSON.stringify(errors, null, 2)}
                     <AppFormInput label="Email" name="email" required value={values.email} onChange={handleChange} {...(touched.email ? { error: errors.email } : {})} />
                     <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
                     <Box display="flex" justifyContent="space-between">
-                      <Checkbox size="md"><Text fontSize={12}>Remember for 30 days</Text></Checkbox>
+                      <Checkbox checked={values.remember} onChange={(e) => setFieldValue('remember', !values.remember)} size="md"><Text fontSize={12}>Remember for 30 days</Text></Checkbox>
                       <Link to='/auth/reset-password'><Text color="green" fontSize={12}>Forgot password</Text></Link>
                     </Box>
                     <Button width="100%" colorScheme='teal' type="submit">Submit</Button>

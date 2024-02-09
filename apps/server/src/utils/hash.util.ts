@@ -15,6 +15,7 @@ export function hashPassword(password: string) {
 
 export function verifyPassword({ candidatePassword, salt, hash }: IVerifyPasswordArgs) {
     const candidateHash = pbkdf2Sync(candidatePassword, salt, 1000, 64, "sha512").toString("hex");
+    console.log("🚀 ~ verifyPassword ~ candidateHash:", candidateHash)
 
     return candidateHash === hash;
 }

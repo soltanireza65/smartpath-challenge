@@ -14,6 +14,7 @@ export type SignUpResponce = {
 export type SignInInput = {
     email: string;
     password: string;
+    remember: boolean;
 }
 
 export type SignInResponce = {

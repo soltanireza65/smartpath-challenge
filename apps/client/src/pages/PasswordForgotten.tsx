@@ -1,26 +1,19 @@
-import { Box, Button, Card, CardBody, Checkbox, Text } from '@chakra-ui/react';
+import { Box, Button, Card, CardBody, Text } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import AppFormInput from '../components/AppFormInput';
-import GoogleIcon from '../components/icons/GoogleIcon';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
-import { getGoogleOAuthUrl } from '../utils/google';
 
 const validationSchema = yup.object({
-  name: yup.string().required("name is required"),
   email: yup
     .string()
     .email("Enter a valid email")
     .required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required"),
 });
 
-const SignInPage = () => {
+const PasswordForgotten = () => {
   const navigate = useNavigate();
 
   const { setAccessToken } = useAuth()
@@ -35,16 +28,15 @@ const SignInPage = () => {
         height="100vh"
       >
         <>ICON</>
-        <Text fontSize={24} fontWeight="700">Log in to your account</Text>
+        <Text fontSize={24} fontWeight="700">Forgot password</Text>
         <Text fontSize={12} color="text.secondary" mb={4}>
-          Wellcome back! Please enter your details.
+          No worries, we'll send you reset instructions.
         </Text>
         <Card>
           <CardBody>
             <Formik
               initialValues={{
                 email: "",
-                password: "",
               }}
               validationSchema={validationSchema}
               onSubmit={async (values) => {
@@ -64,18 +56,7 @@ const SignInPage = () => {
                 <Form>
                   <Box display="flex" flexDirection="column" gap={2} width={300}>
                     <AppFormInput label="Email" name="email" required value={values.email} onChange={handleChange} {...(touched.email ? { error: errors.email } : {})} />
-                    <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
-                    <Box display="flex" justifyContent="space-between">
-                      <Checkbox size="md"><Text fontSize={12}>Remember for 30 days</Text></Checkbox>
-                      <Link to='/auth/reset-password'><Text color="green" fontSize={12}>Forgot password</Text></Link>
-                    </Box>
-                    <Button width="100%" colorScheme='teal' type="submit">Submit</Button>
-                    <a href={getGoogleOAuthUrl()}>
-                      <Button w="100%" display="flex" gap={2}>
-                        <GoogleIcon />
-                        <Text>Sign in with google</Text>
-                      </Button>
-                    </a>
+                    <Button width="100%" colorScheme='teal' type="submit">Reset password</Button>
                   </Box>
                 </Form>
               )}
@@ -85,8 +66,7 @@ const SignInPage = () => {
         </Card>
         <Box mt={4}>
           <Box display="flex" gap={2} alignItems="center">
-            <Text fontSize={12} color="text.secondary">Don't have an account?</Text>
-            <Text fontSize={12} cursor="pointer" color="green" onClick={() => navigate("/auth/signup")}>signup</Text>
+            <Text fontSize={12} cursor="pointer" color="green" onClick={() => navigate("/auth/signin")}>back to log in</Text>
           </Box>
         </Box>
       </Box>
@@ -94,4 +74,4 @@ const SignInPage = () => {
   )
 }
 
-export default SignInPage
+export default PasswordForgotten

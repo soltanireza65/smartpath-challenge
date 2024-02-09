@@ -1,10 +1,13 @@
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URL } from "@/config"
 import { server } from "@/main"
 import { hashPassword, verifyPassword } from "@/utils/hash.util"
+import { Mailer } from "@/utils/mailer"
+import { generateRandomNumber } from "@/utils/num.utils"
 import prisma from "@/utils/prisma"
+import * as fastifyJwt from "@fastify/jwt"
 import axios from "axios"
 import { stringify } from "qs"
-import { GoogleTokensResult, GoogleUserResult, SignInInput, SignInResponce, SignUpInput } from "types"
+import { GoogleTokensResult, GoogleUserResult, JWTPayload, SignInInput, SignInResponce, SignUpInput } from "types"
 
 
 
@@ -20,7 +23,7 @@ export class AuthService {
             data: { ...rest, salt, password: hash }
         })
 
-        const token = server.jwt.sign({ id: user.id, ...rest })
+        const token = this.signJWT({ id: user.id, ...rest })
 
         return {
             accessToken: token,
@@ -46,11 +49,102 @@ export class AuthService {
             throw new Error("Invalid Credentials")
         }
 
-        const { password, salt, ...rest } = user
-        const token = server.jwt.sign(rest)
+        const { password, salt, passwordResetCode, ...rest } = user
+
+        const token = this.signJWT(rest)
 
         return { accessToken: token }
     }
+    public static async forggotPassword(payload: { email: string }): Promise<any> {
+
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: payload.email
+            }
+        })
+
+        if (!user) {
+            throw new Error("Invalid Credentials")
+        }
+
+        const resetCode = generateRandomNumber()
+        console.log("🚀 ~ AuthService ~ forggotPassword ~ resetCode:", resetCode)
+
+        // TODO: set this back to null after reset has been done
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                passwordResetCode: resetCode
+            }
+        })
+
+        await Mailer.sendEmail({
+            from: "0Ug1I@example.com",
+            to: user.email,
+            subject: "Password Reset",
+            text: `Your password reset code is ${resetCode}`
+        })
+
+        return { resetCode }
+    }
+
+    public static async verifyPasswordResetCode(payload: { email: string, code: string }): Promise<any> {
+
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: payload.email
+            }
+        })
+        console.log("🚀 ~ AuthService ~ verifyPasswordResetCode ~ user:", user)
+
+        if (!user || user.passwordResetCode != payload.code) {
+            throw new Error("Invalid Credentials")
+        }
+
+        return {
+            status: "success"
+        }
+    }
+    public static async passwordReset(payload: { email: string, password: string, code: string }): Promise<any> {
+
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: payload.email
+            }
+        })
+
+        // console.log("🚀 ~ AuthService ~ verifyPasswordResetCode ~ user:", user)
+
+        if (!user || user.passwordResetCode != payload.code) {
+            throw new Error("Invalid Credentials")
+        }
+
+        // we don't need to get passwordConfirmation, since its more of a client side validation than server side (imo).
+
+        const { hash, salt } = hashPassword(payload.password)
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                password: hash,
+                passwordResetCode: null
+            }
+        })
+
+        return {
+            status: "success"
+        }
+    }
+
+
+
     public static async getGoogleOAuthToken(code: string): Promise<GoogleTokensResult> {
         const url = "https://oauth2.googleapis.com/token";
         const values = {
@@ -93,6 +187,16 @@ export class AuthService {
             // log.error(error, "Error fetching Google user");
             throw new Error(error.message);
         }
+    }
+
+
+    private static signJWT(payload: JWTPayload, options?: Partial<fastifyJwt.SignOptions>) {
+        return server.jwt.sign(payload, {
+            algorithm: "RS256",
+            expiresIn: "2h",
+            // key: server.config.JWT_PRIVATE_KEY, use separate key for access token and refresh token
+            ...(options && options),
+        })
     }
 }
 

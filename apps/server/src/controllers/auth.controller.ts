@@ -37,6 +37,49 @@ export class AuthController {
             return reply.code(401).send(error)
         }
     }
+    public static async forggotPassword(
+        request: FastifyRequest<{ Body: { email: string } }>,
+        reply: FastifyReply
+    ) {
+        const { email } = request.body
+
+        try {
+            const res = await AuthService.forggotPassword({ email })
+
+            return reply.code(201).send(res)
+        } catch (error) {
+            return reply.code(401).send(error)
+        }
+    }
+    public static async verifyPasswordResetCode(
+        request: FastifyRequest<{ Body: { email: string, code: string } }>,
+        reply: FastifyReply
+    ) {
+        const { email, code } = request.body
+
+        try {
+            const res = await AuthService.verifyPasswordResetCode({ email, code })
+
+            return reply.code(200).send(res)
+        } catch (error) {
+            return reply.code(401).send(error)
+        }
+    }
+    public static async passwordReset(
+        request: FastifyRequest<{ Body: { email: string, password: string, code: string } }>,
+        reply: FastifyReply
+    ) {
+        const { email, password , code} = request.body
+
+        try {
+            const res = await AuthService.passwordReset({ email, password, code })
+
+            return reply.code(200).send(res)
+        } catch (error) {
+            return reply.code(401).send(error)
+        }
+    }
+
     public static async googleOAuth(
         request: FastifyRequest<{ Querystring: { code: string } }>,
         reply: FastifyReply

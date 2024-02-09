@@ -44,3 +44,10 @@ export type GoogleUserResult = {
     picture: string;
     locale: string;
 }
+
+
+export type JWTPayload = {
+    id: number;
+    email: string;
+    name: string | null;
+}

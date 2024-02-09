@@ -30,3 +30,5 @@ npm run dev
 - the `reset-password` flow is working as expected, im just passing the code as a query strig to the next page to make testing much easier.
 
 - email preview link will be logged to the console if you want to check if its working
+
+- I choosed to implement a `monorepo` so that i can share the common code between apps (even thgouth i never used it in this case), just wnated to show what it would looks like in more realistic senarios

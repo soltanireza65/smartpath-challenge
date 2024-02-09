@@ -3,7 +3,6 @@ import { Form, Formik } from 'formik';
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import AppFormInput from '../components/AppFormInput';
-import GoogleIcon from '../components/icons/GoogleIcon';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/apiClient';
 
@@ -68,10 +67,10 @@ const SignUpPage = () => {
                     <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
 
                     <Button width="100%" colorScheme='teal' type="submit">Submit</Button>
-                    <Button display="flex" gap={2}>
+                    {/* <Button display="flex" gap={2}>
                       <GoogleIcon />
                       <Text>Sign up with google</Text>
-                    </Button>
+                    </Button> */}
                   </Box>
                 </Form>
               )}

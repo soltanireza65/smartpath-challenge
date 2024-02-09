@@ -41,11 +41,11 @@ const PasswordForgotten = () => {
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 try {
-                  const { data } = await apiClient.post("/auth/signin", values)
-                  const { accessToken } = data
-                  if (accessToken) {
-                    setAccessToken(accessToken)
-                    navigate("/");
+                  const { data } = await apiClient.post("/auth/password-forgot", values)
+                  const { resetCode } = data
+                  if (resetCode) {
+                    // setAccessToken(accessToken)
+                    navigate(`/auth/password-reset-verify?code=${resetCode}&email=${values.email}`, { state: { resetCode } });
                   }
                 } catch (error) {
                   console.error("🚀 ~ onSubmit= ~ error:", error)

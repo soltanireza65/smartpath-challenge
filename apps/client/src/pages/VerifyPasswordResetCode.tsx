@@ -13,7 +13,7 @@ const validationSchema = yup.object({
     .required("Verification Code is required"),
 });
 
-const PasswordReset = () => {
+const VerifyPasswordResetCode = () => {
   const navigate = useNavigate();
   const params = useParams()
   const searchParams = new URLSearchParams(document.location.search)
@@ -43,20 +43,17 @@ const PasswordReset = () => {
               initialValues={{
                 code: searchParams.get('code') ?? "",
                 email: searchParams.get('email') ?? "",
-                password: "",
-                passwordConfirmation: "",
               }}
               // validationSchema={validationSchema}
               onSubmit={async (values) => {
-                const { passwordConfirmation, ...rest } = values
                 try {
-                  const { data } = await apiClient.post("/auth/password-reset", rest)
+                  const { data } = await apiClient.post("/auth/password-forgot-verify", values)
                   const { success } = data
                   if (success) {
-                    navigate(`/`);
+                    navigate(`/auth/password-reset?email=${values.email}&code=${values.code}`);
                   }
                 } catch (error) {
-                  // console.error("🚀 ~ onSubmit= ~ error:", error)
+                  console.error("🚀 ~ onSubmit= ~ error:", error)
                 }
               }}
             >
@@ -65,8 +62,7 @@ const PasswordReset = () => {
                   <Box display="flex" flexDirection="column" gap={4} width={300}>
                     {/* {values.code}
                     {values.email} */}
-                    <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
-                    <AppFormInput label="PasswordConfirmation" name="passwordConfirmation" required value={values.passwordConfirmation} onChange={handleChange} {...(touched.passwordConfirmation ? { error: errors.passwordConfirmation } : {})} />
+                    <AppPinInput value={values.code} onComplete={(v) => setFieldValue("code", v)} />
                     <Button width="100%" colorScheme='teal' type="submit">Verify email</Button>
                   </Box>
                 </Form>
@@ -92,4 +88,4 @@ const PasswordReset = () => {
   )
 }
 
-export default PasswordReset
+export default VerifyPasswordResetCode

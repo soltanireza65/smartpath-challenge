@@ -18,42 +18,55 @@ export class AuthService {
         const { password, ...rest } = payload
 
         const { hash, salt } = hashPassword(payload.password)
+        try {
+            const user = await prisma.user.create({
+                data: { ...rest, salt, password: hash }
+            })
+            server.log.info("🚀 ~ AuthService ~ signup ~ user:", user)
 
-        const user = await prisma.user.create({
-            data: { ...rest, salt, password: hash }
-        })
+            const token = this.signJWT({ id: user.id, ...rest })
 
-        const token = this.signJWT({ id: user.id, ...rest })
-
-        return {
-            accessToken: token,
+            return {
+                accessToken: token,
+            }
+        } catch (error: any) {
+            server.log.error(error)
+            if (error.code === "P2002") {
+                throw new Error("Email already exists")
+            }
+            throw error
         }
+
     }
 
-    public static async signin(payload: SignInInput): Promise<SignInResponce> {
+    public static async signin(payload: SignInInput) {
 
 
-        const user = await prisma.user.findUnique({
-            where: {
-                email: payload.email
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: payload.email
+                }
+            })
+
+            if (!user) {
+                throw new Error("Invalid Credentials")
             }
-        })
 
-        if (!user) {
-            throw new Error("Invalid Credentials")
+            const verified = verifyPassword({ candidatePassword: payload.password, hash: user.password, salt: user.salt })
+
+            if (!verified) {
+                throw new Error("Invalid Credentials")
+            }
+
+            const { password, salt, passwordResetCode, ...rest } = user
+
+            const token = this.signJWT(rest)
+
+            return { accessToken: token }
+        } catch (error) {
+            throw error
         }
-
-        const verified = verifyPassword({ candidatePassword: payload.password, hash: user.password, salt: user.salt })
-
-        if (!verified) {
-            throw new Error("Invalid Credentials")
-        }
-
-        const { password, salt, passwordResetCode, ...rest } = user
-
-        const token = this.signJWT(rest)
-
-        return { accessToken: token }
     }
     public static async forggotPassword(payload: { email: string }): Promise<any> {
 
@@ -106,7 +119,7 @@ export class AuthService {
         }
 
         return {
-            status: "success"
+            success: true
         }
     }
     public static async passwordReset(payload: { email: string, password: string, code: string }): Promise<any> {
@@ -139,7 +152,7 @@ export class AuthService {
         })
 
         return {
-            status: "success"
+            success: true
         }
     }
 
@@ -192,7 +205,7 @@ export class AuthService {
 
     private static signJWT(payload: JWTPayload, options?: Partial<fastifyJwt.SignOptions>) {
         return server.jwt.sign(payload, {
-            algorithm: "RS256",
+            // algorithm: "ES256",
             expiresIn: "2h",
             // key: server.config.JWT_PRIVATE_KEY, use separate key for access token and refresh token
             ...(options && options),

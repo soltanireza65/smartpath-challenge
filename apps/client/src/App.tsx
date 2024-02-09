@@ -7,8 +7,8 @@ import SignUpPage from "./pages/SignUp";
 import { PrivateRoute } from "./components/PrivateRoute";
 import SignInCallback from "./pages/SignInCallback";
 import PasswordForgotten from "./pages/PasswordForgotten";
+import VerifyPasswordResetCode from "./pages/VerifyPasswordResetCode";
 import PasswordReset from "./pages/PasswordReset";
-// import { PrivateRoute } from "./components/PrivateRoute";
 
 export const isAuthenticated = !!localStorage.getItem("accessToken") ?? false
 
@@ -21,6 +21,7 @@ function App() {
         <Route path="/auth/signup" element={<SignUpPage />} />
         <Route path="/auth/signin" element={<SignInPage />} />
         <Route path="/auth/password-forgot" element={<PasswordForgotten />} />
+        <Route path="/auth/password-reset-verify" element={<VerifyPasswordResetCode />} />
         <Route path="/auth/password-reset" element={<PasswordReset />} />
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<HomePage />} />

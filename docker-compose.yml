@@ -1,21 +1,6 @@
 version: '3.9'
 
 services:
-  server:
-    build:
-      context: .
-      dockerfile: ./apps/wallet/Dockerfile
-      target: development
-    command: npm run start:dev wallet
-    env_file:
-      - ./apps/server/.env
-    depends_on:
-      - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - '8000:8000'
   postgres:
     image: postgres
     environment:

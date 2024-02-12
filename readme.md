@@ -3,6 +3,17 @@
 ```bash
 docker compose up
 ```
+- obviously docker containers are optimized for production (only for test purposes)
+- for production environment, we need more complex setup, e.g. 
+    - build and serve client as static assets with nginx instead of node
+    - setup node proccess manages for server
+    - ...
+
+## Client
+running at port 5173
+
+## Server
+running at port 8000
 
 
 ## Endpoint

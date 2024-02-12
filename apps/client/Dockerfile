@@ -30,6 +30,6 @@ CMD ["npm", "run", "dev"]
 
 # COPY deploy/nginx/nginx.conf /etc/nginx/conf.d
 
-# EXPOSE 3000
+# EXPOSE 5173
 
 # CMD ["nginx", "-g", "daemon off;"]

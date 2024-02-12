@@ -1,22 +1,34 @@
-FROM node:lts-alpine as builder
+FROM node:alpine As development
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY . .
+COPY package*.json ./
 
 RUN npm install
 
-RUN npm run build
+COPY . .
 
-FROM nginx:stable-alpine
+RUN npm run dev
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-RUN ls -al
+# FROM node:lts-alpine as builder
 
-RUN rm /etc/nginx/conf.d/default.conf
+# WORKDIR /app
 
-COPY deploy/nginx/nginx.conf /etc/nginx/conf.d
+# COPY . .
 
-EXPOSE 3000
+# RUN npm install
 
-CMD ["nginx", "-g", "daemon off;"]
+# RUN npm run build
+
+# FROM nginx:stable-alpine
+
+# COPY --from=builder /app/dist /usr/share/nginx/html
+# RUN ls -al
+
+# RUN rm /etc/nginx/conf.d/default.conf
+
+# COPY deploy/nginx/nginx.conf /etc/nginx/conf.d
+
+# EXPOSE 3000
+
+# CMD ["nginx", "-g", "daemon off;"]

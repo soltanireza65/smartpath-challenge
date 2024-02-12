@@ -7,7 +7,7 @@ import prisma from "@/utils/prisma"
 import * as fastifyJwt from "@fastify/jwt"
 import axios from "axios"
 import { stringify } from "qs"
-import { GoogleTokensResult, GoogleUserResult, JWTPayload, SignInInput, SignInResponce, SignUpInput } from "types"
+import { GoogleTokensResult, GoogleUserResult, JWTPayload, SignInInput, SignUpInput } from "@/types";
 
 
 

@@ -2,7 +2,7 @@ import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URL } fro
 import { AuthService } from "@/services/auth.service";
 import axios from "axios";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { GoogleUserResult, SignInInput, SignUpInput } from "types";
+import { GoogleUserResult, SignInInput, SignUpInput } from "@/types";
 import { stringify } from "qs";
 import { server } from "@/main";
 import prisma from "@/utils/prisma";

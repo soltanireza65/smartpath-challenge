@@ -5,25 +5,26 @@ services:
     build:
       context: ./apps/server/
       dockerfile: ./Dockerfile
-      target: development
-    command: npm run start
-    env_file:
-      - ./apps/server/.env
     depends_on:
       - postgres
+    restart: unless-stopped
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '8000:8000'
-  # client:
-  #   container_name: client
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/client/Dockerfile
-  #   restart: unless-stopped
-  #   ports:
-  #     - 8081:8081
+  client:
+    build:
+      context: ./apps/client/
+      dockerfile: ./Dockerfile
+    depends_on:
+      - server
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
   postgres:
     image: postgres
     environment:

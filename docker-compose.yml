@@ -9,9 +9,9 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
-    # volumes:
-    #   - ./apps/server:/usr/src/app
-    #   - /usr/src/app/node_modules
+    volumes:
+      - ./apps/server:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - '8000:8000'
   client:
@@ -22,9 +22,9 @@ services:
     depends_on:
       - server
     restart: unless-stopped
-    # volumes:
-    #   - ./apps/client:/usr/src/app
-    #   - /usr/src/app/node_modules
+    volumes:
+      - ./apps/client:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - 5173:5173
   postgres:

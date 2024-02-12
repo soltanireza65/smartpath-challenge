@@ -17,6 +17,8 @@ const schema = z.object({
     MAILER_HOST: z.string(),
     MAILER_PORT: z.string(),
     MAILER_SECURE: z.string(),
+
+    CLIENT_URL: z.string(),
 })
 
 export type Config = z.infer<typeof schema>;
@@ -35,4 +37,6 @@ export const {
     MAILER_PORT,
     MAILER_SECURE,
     MAILER_USER,
+
+    CLIENT_URL
 } = schema.parse(process.env);

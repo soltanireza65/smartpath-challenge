@@ -1,11 +1,9 @@
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_REDIRECT_URL } from "@/config";
-import { AuthService } from "@/services/auth.service";
-import axios from "axios";
-import { FastifyReply, FastifyRequest } from "fastify";
-import { GoogleUserResult, SignInInput, SignUpInput } from "@/types";
-import { stringify } from "qs";
+import { CLIENT_URL } from "@/config";
 import { server } from "@/main";
+import { AuthService } from "@/services/auth.service";
+import { SignInInput, SignUpInput } from "@/types";
 import prisma from "@/utils/prisma";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 export class AuthController {
     public static async signup(
@@ -69,7 +67,7 @@ export class AuthController {
         request: FastifyRequest<{ Body: { email: string, password: string, code: string } }>,
         reply: FastifyReply
     ) {
-        const { email, password , code} = request.body
+        const { email, password, code } = request.body
 
         try {
             const res = await AuthService.passwordReset({ email, password, code })
@@ -110,11 +108,11 @@ export class AuthController {
 
             const token = server.jwt.sign(rest)
 
-            return reply.redirect(`http://localhost:5173/auth/callback?accessToken=${token}`)
+            return reply.redirect(`${CLIENT_URL}/auth/callback?accessToken=${token}`)
 
         } catch (error) {
-            console.log("🚀 ~ AuthController ~ error:", error)
-            reply.redirect("http://localhost:5173")
+            server.log.error("🚀 ~ AuthController ~ error:", error)
+            reply.redirect(CLIENT_URL)
         }
     }
 }

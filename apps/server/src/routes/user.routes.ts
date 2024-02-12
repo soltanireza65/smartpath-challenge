@@ -22,10 +22,10 @@ const getUsersSchema = {
 export async function userRoutes(server: FastifyInstance) {
 
     server.get("/", { schema: getUsersSchema }, UserController.get);
-    // server.delete("/", async () => {
-    //     return await prisma.user.deleteMany({
-    //     })
-    // });
+    server.delete("/", async () => {
+        return await prisma.user.deleteMany({
+        })
+    });
 
 
     server.log.info("User routes registered")

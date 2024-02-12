@@ -1,7 +1,5 @@
 import axios from "axios";
 
 export const apiClient = axios.create({
-    baseURL: `http://localhost:8000/api`,
+    baseURL: `${import.meta.env.VITE_SERVER_ENDPOINT}/api`,
 })
-
-// import.meta.env.VITE_SERVER_ENDPOINT

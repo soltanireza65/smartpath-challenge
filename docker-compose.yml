@@ -10,7 +10,7 @@ services:
       - postgres
     restart: unless-stopped
     # volumes:
-    #   - .:/usr/src/app
+    #   - ./apps/server:/usr/src/app
     #   - /usr/src/app/node_modules
     ports:
       - '8000:8000'
@@ -23,7 +23,7 @@ services:
       - server
     restart: unless-stopped
     # volumes:
-    #   - .:/usr/src/app
+    #   - ./apps/client:/usr/src/app
     #   - /usr/src/app/node_modules
     ports:
       - 3000:3000

@@ -3,26 +3,28 @@ version: '3.9'
 services:
   server:
     build:
-      context: .
-      dockerfile: ./apps/server/Dockerfile
+      context: ./apps/server
+      dockerfile: ./Dockerfile
+    command: ["npm", "run", "dev"]
     depends_on:
       - postgres
     restart: unless-stopped
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+    # volumes:
+    #   - .:/usr/src/app
+    #   - /usr/src/app/node_modules
     ports:
       - '8000:8000'
   client:
     build:
-      context: .
-      dockerfile: ./apps/client/Dockerfile
+      context: ./apps/client
+      dockerfile: ./Dockerfile
+    command: ["npm", "run", "dev"]
     depends_on:
       - server
     restart: unless-stopped
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+    # volumes:
+    #   - .:/usr/src/app
+    #   - /usr/src/app/node_modules
     ports:
       - 3000:3000
   postgres:

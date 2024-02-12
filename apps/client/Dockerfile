@@ -1,28 +1,29 @@
-FROM node:alpine As development
+FROM node:20.11.0-alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+# COPY . .
 
 RUN npm install
 
 COPY . .
 
-RUN npm run dev
+CMD ["npm", "run", "dev"]
 
 # FROM node:lts-alpine as builder
 
-# WORKDIR /app
+# WORKDIR /usr/src/app
 
 # COPY . .
 
 # RUN npm install
 
-# RUN npm run build
+# RUN npm run build --scope=client
 
 # FROM nginx:stable-alpine
 
-# COPY --from=builder /app/dist /usr/share/nginx/html
+# COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 # RUN ls -al
 
 # RUN rm /etc/nginx/conf.d/default.conf

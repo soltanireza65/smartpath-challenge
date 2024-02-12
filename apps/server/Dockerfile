@@ -1,11 +1,13 @@
-FROM node:alpine As development
+FROM node:20.11.0-alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
+# COPY . .
 
 RUN npm install
+RUN npm run prisma:gen
 
 COPY . .
 
-RUN npm run dev
+CMD ["npm", "run", "dev"]

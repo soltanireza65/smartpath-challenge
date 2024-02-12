@@ -67,7 +67,7 @@ const SignInPage = () => {
                     <AppFormInput label="Password" name="password" required value={values.password} onChange={handleChange} {...(touched.password ? { error: errors.password } : {})} />
                     <Box display="flex" justifyContent="space-between">
                       <Checkbox defaultChecked={values.remember} onChange={(e) => setFieldValue('remember', !values.remember)} size="md"><Text fontSize={12}>Remember for 30 days</Text></Checkbox>
-                      <Link to='/auth/reset-password'><Text color="green" fontSize={12}>Forgot password</Text></Link>
+                      <Link to='/auth/password-forgot'><Text color="green" fontSize={12}>Forgot password</Text></Link>
                     </Box>
                     <Button width="100%" colorScheme='teal' type="submit">Submit</Button>
                     <a href={getGoogleOAuthUrl()}>

@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "npm run prisma:deploy & tsx watch src/main.ts",
     "build": "tsc -p tsconfig.json",
-    "prisma:gen": "npx prisma generate",
+    "prisma:generate": "npx prisma generate",
+    "prisma:deploy": "npx prisma migrate deploy",
     "start": "node index.js"
   },
   "dependencies": {

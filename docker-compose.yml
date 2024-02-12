@@ -3,8 +3,8 @@ version: '3.9'
 services:
   server:
     build:
-      context: ./apps/server/
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./apps/server/Dockerfile
     depends_on:
       - postgres
     restart: unless-stopped
@@ -15,8 +15,8 @@ services:
       - '8000:8000'
   client:
     build:
-      context: ./apps/client/
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./apps/client/Dockerfile
     depends_on:
       - server
     restart: unless-stopped
